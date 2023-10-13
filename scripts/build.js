@@ -8,16 +8,16 @@ if (!fs.existsSync('dist')) {
   fs.mkdirSync('dist')
 }
 
+// 这段代码的逻辑是：先从配置文件读取配置，再通过命令行参数对构建配置做过滤，以此构建出不同版本的Vue.js。经过 Rollup 的构建打包后，最终会在 dist 目录下生成 vue.runtime.common.js
 let builds = require('./config').getAllBuilds()
-
-// filter builds via command line arg
+// 通过命令行参数构建过滤器
 if (process.argv[2]) {
   const filters = process.argv[2].split(',')
   builds = builds.filter(b => {
     return filters.some(f => b.output.file.indexOf(f) > -1 || b._name.indexOf(f) > -1)
   })
 } else {
-  // filter out weex builds by default
+  // 在默认情况下过滤出 weex 构建
   builds = builds.filter(b => {
     return b.output.file.indexOf('weex') === -1
   })
@@ -25,6 +25,12 @@ if (process.argv[2]) {
 
 build(builds)
 
+
+/**
+ *
+ * @param builds 构建数组
+ * @description 按顺序处理一个构建任务数组中的每个构建任务
+ */
 function build (builds) {
   let built = 0
   const total = builds.length

@@ -26,8 +26,17 @@ const weexFactoryPlugin = {
 }
 
 const aliases = require('./alias')
+
+/**
+ *
+ * @param p url
+ * @returns {string} p在当前工作目录对应的绝对路径
+ * @description 把参数p通过"/"做分割得到一个数组，首项设置为base，通过别名读取base，返回p在当前工作目录对应的绝对路径
+ * @example  resolve('web/entry-runtime.js') -> 返回源码目录下的 src/platforms/web/entry-runtime.js
+ */
 const resolve = p => {
   const base = p.split('/')[0]
+  // aliases[base]找到base在当前工作目录的绝对路径中的绝对路径
   if (aliases[base]) {
     return path.resolve(aliases[base], p.slice(base.length + 1))
   } else {
@@ -35,7 +44,20 @@ const resolve = p => {
   }
 }
 
+/**
+ *
+ * @type {{"web-full-prod": {entry: string, format: string, alias: {he: string}, banner: string, dest: string, env: string}, "web-server-renderer-basic": {entry: string, plugins: ({generateBundle: function(): void, name: string, options: function(*): void, resolveId: function(*, *): (null|string)}|{transform: function(*, *): (null|*), load: function(*): (string|string|undefined), name: string, options: function(*): void, resolveId: function(*, *): (*)})[], format: string, moduleName: string, dest: string, env: string}, "web-runtime-cjs-dev": {entry: string, format: string, banner: string, dest: string, env: string}, "weex-factory": {entry: string, weex: boolean, plugins: {intro(): string, outro(): string}[], format: string, dest: string}, "web-runtime-cjs-prod": {entry: string, format: string, banner: string, dest: string, env: string}, "web-full-esm-browser-prod": {entry: string, format: string, transpile: boolean, alias: {he: string}, banner: string, dest: string, env: string}, "web-server-renderer-dev": {entry: string, external: string[], format: string, dest: string, env: string}, "web-full-dev": {entry: string, format: string, alias: {he: string}, banner: string, dest: string, env: string}, "web-compiler-browser": {entry: string, plugins: ({generateBundle: function(): void, name: string, options: function(*): void, resolveId: function(*, *): (null|string)}|{transform: function(*, *): (null|*), load: function(*): (string|string|undefined), name: string, options: function(*): void, resolveId: function(*, *): (*)})[], format: string, moduleName: string, dest: string, env: string}, "web-runtime-dev": {entry: string, format: string, banner: string, dest: string, env: string}, "web-full-cjs-prod": {entry: string, format: string, alias: {he: string}, banner: string, dest: string, env: string}, "web-server-renderer-webpack-server-plugin": {entry: string, external: string[], format: string, dest: string}, "web-full-esm": {entry: string, format: string, alias: {he: string}, banner: string, dest: string}, "web-runtime-prod": {entry: string, format: string, banner: string, dest: string, env: string}, "web-server-renderer-webpack-client-plugin": {entry: string, external: string[], format: string, dest: string}, "web-full-cjs-dev": {entry: string, format: string, alias: {he: string}, banner: string, dest: string, env: string}, "web-compiler": {entry: string, external: string[], format: string, dest: string}, "web-server-renderer-prod": {entry: string, external: string[], format: string, dest: string, env: string}, "web-full-esm-browser-dev": {entry: string, format: string, transpile: boolean, alias: {he: string}, banner: string, dest: string, env: string}, "weex-framework": {entry: string, weex: boolean, format: string, dest: string}, "weex-compiler": {entry: string, external: string[], weex: boolean, format: string, dest: string}, "web-runtime-esm": {entry: string, format: string, banner: string, dest: string}}}
+ * @description 列举了关于Vue.js构建的配置，包括服务端渲染、webpack插件、wexx等的打包配置。对于单个配置，其遵循Rollup的构建规则
+ */
 const builds = {
+  /*
+  * entry: 构建的入口JS文件地址
+  * dest: 构建后的JS文件地址
+  * format: 构建格式
+  * cjs: 构建出来的文件遵循 CommonJS 规范
+  * es: 构建出来的文件遵循 ES Module 规范
+  * */
+
   // Runtime only (CommonJS). Used by bundlers e.g. Webpack & Browserify
   'web-runtime-cjs-dev': {
     entry: resolve('web/entry-runtime.js'),

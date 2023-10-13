@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<!--
+直接引入vue在开发环境会提示：
+  You are running Vue in development mode.
+  Make sure to turn on production mode when deploying for production.
+  See more tips at https://vuejs.org/guide/deployment.html
+可以通过设置 productionTip 为 false 即可关闭这条提示
+但是如果直接修改 Vue.config 会报错
+源码在 global-api/index.js 28行
+-->
+<script type="module">
+  import Vue from "../../dist/vue.esm.browser.js";
+
+  console.log(Vue.config, "configDef");
+  Vue.config.productionTip = false;
+
+  // Vue.config = {
+  //   productionTip: false
+  // };
+  // 报错：[Vue warn]: Do not replace the Vue.config object, set individual fields instead.
+</script>
+</body>
+</html>

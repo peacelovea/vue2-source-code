@@ -1,5 +1,9 @@
 /* @flow */
 
+/*
+* 关键代码是：import Vue from 'core/index' core/index是真正初始化Vue的地方
+* 之后的逻辑都是对导入的Vue对象做拓展
+* */
 import Vue from 'core/index'
 import config from 'core/config'
 import { extend, noop } from 'shared/util'
@@ -20,6 +24,7 @@ import platformDirectives from './directives/index'
 import platformComponents from './components/index'
 
 // install platform specific utils
+// 安装特定于平台的工具
 Vue.config.mustUseProp = mustUseProp
 Vue.config.isReservedTag = isReservedTag
 Vue.config.isReservedAttr = isReservedAttr
@@ -27,13 +32,15 @@ Vue.config.getTagNamespace = getTagNamespace
 Vue.config.isUnknownElement = isUnknownElement
 
 // install platform runtime directives & components
+// 安装平台运行时指令和组件
 extend(Vue.options.directives, platformDirectives)
 extend(Vue.options.components, platformComponents)
 
 // install platform patch function
+// 安装平台补丁功能
 Vue.prototype.__patch__ = inBrowser ? patch : noop
 
-// public mount method
+// Vue原型挂载$mount
 Vue.prototype.$mount = function (
   el?: string | Element,
   hydrating?: boolean

@@ -1,4 +1,7 @@
 /* @flow */
+/**
+ * 该文件主要是在 Vue 上扩展的一些全局方法的定义，Vue官网中全局的API都可以在这里找到
+ */
 
 import config from '../config'
 import { initUse } from './use'
@@ -23,6 +26,7 @@ export function initGlobalAPI (Vue: GlobalAPI) {
   const configDef = {}
   configDef.get = () => config
   if (process.env.NODE_ENV !== 'production') {
+    // 非生产环境 拦截Vue.config.set  当修改Vue.config时直接报错
     configDef.set = () => {
       warn(
         'Do not replace the Vue.config object, set individual fields instead.'
