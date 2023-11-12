@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <!-- 引入完整版Vue 也就是runtime-with-compiler版本  -->
+
+</head>
+<body>
+<div id="app">
+  {{ message }}
+</div>
+<script src="../../dist/vue.js"></script>
+<script>
+  debugger
+  let app = new Vue({
+    el: "#app",
+    data: {
+      message: "Hello Vue!"
+    }
+  });
+</script>
+</body>
+</html>

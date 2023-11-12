@@ -14,7 +14,7 @@ let uid = 0
 
 export function initMixin (Vue: Class<Component>) {
   Vue.prototype._init = function (options?: Object) {
-    const vm: Component = this
+    const vm: Component = this // 设置Vue实例的构造函数。这样做的目的是让Vue实例能够访问到它的构造函数，从而在后续的过程中能够创建新的Vue实例。
     // a uid
     vm._uid = uid++
 

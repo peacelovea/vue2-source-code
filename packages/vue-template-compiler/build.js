@@ -13,21 +13,21 @@ var emptyObject = Object.freeze({});
 
 // These helpers produce better VM code in JS engines due to their
 // explicitness and function inlining.
-function isUndef (v) {
-  return v === undefined || v === null
+function isUndef(v) {
+  return v === undefined || v === null;
 }
 
 /**
  * Check if value is primitive.
  */
-function isPrimitive (value) {
+function isPrimitive(value) {
   return (
-    typeof value === 'string' ||
-    typeof value === 'number' ||
+    typeof value === "string" ||
+    typeof value === "number" ||
     // $flow-disable-line
-    typeof value === 'symbol' ||
-    typeof value === 'boolean'
-  )
+    typeof value === "symbol" ||
+    typeof value === "boolean"
+  );
 }
 
 /**
@@ -35,8 +35,8 @@ function isPrimitive (value) {
  * Objects from primitive values when we know the value
  * is a JSON-compliant type.
  */
-function isObject (obj) {
-  return obj !== null && typeof obj === 'object'
+function isObject(obj) {
+  return obj !== null && typeof obj === "object";
 }
 
 /**
@@ -44,62 +44,62 @@ function isObject (obj) {
  */
 var _toString = Object.prototype.toString;
 
-function toRawType (value) {
-  return _toString.call(value).slice(8, -1)
+function toRawType(value) {
+  return _toString.call(value).slice(8, -1);
 }
 
 /**
  * Strict object type check. Only returns true
  * for plain JavaScript objects.
  */
-function isPlainObject (obj) {
-  return _toString.call(obj) === '[object Object]'
+function isPlainObject(obj) {
+  return _toString.call(obj) === "[object Object]";
 }
 
 /**
  * Check if val is a valid array index.
  */
-function isValidArrayIndex (val) {
+function isValidArrayIndex(val) {
   var n = parseFloat(String(val));
-  return n >= 0 && Math.floor(n) === n && isFinite(val)
+  return n >= 0 && Math.floor(n) === n && isFinite(val);
 }
 
 /**
  * Make a map and return a function for checking if a key
  * is in that map.
  */
-function makeMap (
+function makeMap(
   str,
   expectsLowerCase
 ) {
   var map = Object.create(null);
-  var list = str.split(',');
+  var list = str.split(",");
   for (var i = 0; i < list.length; i++) {
     map[list[i]] = true;
   }
   return expectsLowerCase
     ? function (val) { return map[val.toLowerCase()]; }
-    : function (val) { return map[val]; }
+    : function (val) { return map[val]; };
 }
 
 /**
  * Check if a tag is a built-in tag.
  */
-var isBuiltInTag = makeMap('slot,component', true);
+var isBuiltInTag = makeMap("slot,component", true);
 
 /**
  * Check if an attribute is a reserved attribute.
  */
-var isReservedAttribute = makeMap('key,ref,slot,slot-scope,is');
+var isReservedAttribute = makeMap("key,ref,slot,slot-scope,is");
 
 /**
  * Remove an item from an array.
  */
-function remove (arr, item) {
+function remove(arr, item) {
   if (arr.length) {
     var index = arr.indexOf(item);
     if (index > -1) {
-      return arr.splice(index, 1)
+      return arr.splice(index, 1);
     }
   }
 }
@@ -108,19 +108,25 @@ function remove (arr, item) {
  * Check whether an object has the property.
  */
 var hasOwnProperty = Object.prototype.hasOwnProperty;
-function hasOwn (obj, key) {
-  return hasOwnProperty.call(obj, key)
+
+function hasOwn(obj, key) {
+  return hasOwnProperty.call(obj, key);
 }
 
 /**
  * Create a cached version of a pure function.
+ * 创建一个纯函数的缓存版本
+ *
  */
-function cached (fn) {
+function cached(fn) {
+  // 创建了一个没有原型链的空对象，用于做缓存对象，这样可以避免不要要的原型链查找，提高性能
   var cache = Object.create(null);
-  return (function cachedFn (str) {
+  // 返回一个新将函数。这个新函数会尝试从缓存对象cache中读取结果
+  // 如果命中缓存，直接返回缓存的结果。否则，执行原始函数 fn，将结果存入缓存，并返回结果。
+  return (function cachedFn(str) {
     var hit = cache[str];
-    return hit || (cache[str] = fn(str))
-  })
+    return hit || (cache[str] = fn(str));
+  });
 }
 
 /**
@@ -128,7 +134,7 @@ function cached (fn) {
  */
 var camelizeRE = /-(\w)/g;
 var camelize = cached(function (str) {
-  return str.replace(camelizeRE, function (_, c) { return c ? c.toUpperCase() : ''; })
+  return str.replace(camelizeRE, function (_, c) { return c ? c.toUpperCase() : ""; });
 });
 
 /**
@@ -136,7 +142,7 @@ var camelize = cached(function (str) {
  */
 var hyphenateRE = /\B([A-Z])/g;
 var hyphenate = cached(function (str) {
-  return str.replace(hyphenateRE, '-$1').toLowerCase()
+  return str.replace(hyphenateRE, "-$1").toLowerCase();
 });
 
 /**
@@ -148,22 +154,22 @@ var hyphenate = cached(function (str) {
  */
 
 /* istanbul ignore next */
-function polyfillBind (fn, ctx) {
-  function boundFn (a) {
+function polyfillBind(fn, ctx) {
+  function boundFn(a) {
     var l = arguments.length;
     return l
       ? l > 1
         ? fn.apply(ctx, arguments)
         : fn.call(ctx, a)
-      : fn.call(ctx)
+      : fn.call(ctx);
   }
 
   boundFn._length = fn.length;
-  return boundFn
+  return boundFn;
 }
 
-function nativeBind (fn, ctx) {
-  return fn.bind(ctx)
+function nativeBind(fn, ctx) {
+  return fn.bind(ctx);
 }
 
 var bind = Function.prototype.bind
@@ -173,11 +179,11 @@ var bind = Function.prototype.bind
 /**
  * Mix properties into target object.
  */
-function extend (to, _from) {
+function extend(to, _from) {
   for (var key in _from) {
     to[key] = _from[key];
   }
-  return to
+  return to;
 }
 
 /* eslint-disable no-unused-vars */
@@ -187,7 +193,8 @@ function extend (to, _from) {
  * Stubbing args to make Flow happy without leaving useless transpiled code
  * with ...rest (https://flow.org/blog/2017/05/07/Strict-Function-Call-Arity/).
  */
-function noop (a, b, c) {}
+function noop(a, b, c) {
+}
 
 /**
  * Always return false.
@@ -204,10 +211,10 @@ var identity = function (_) { return _; };
 /**
  * Generate a string containing static keys from compiler modules.
  */
-function genStaticKeys (modules) {
+function genStaticKeys(modules) {
   return modules.reduce(function (keys, m) {
-    return keys.concat(m.staticKeys || [])
-  }, []).join(',')
+    return keys.concat(m.staticKeys || []);
+  }, []).join(",");
 }
 
 /*  */

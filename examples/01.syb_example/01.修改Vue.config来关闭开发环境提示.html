@@ -19,7 +19,11 @@
 
   console.log(Vue.config, "configDef");
   Vue.config.productionTip = false;
-
+  new Vue({
+    el:'#app',
+    components:{APP},
+    remplate:'<APP/>'
+  })
   // Vue.config = {
   //   productionTip: false
   // };

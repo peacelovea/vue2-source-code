@@ -7,7 +7,7 @@ import { FunctionalRenderContext } from 'core/vdom/create-functional-component'
  * 2.初始化全局API
  * Vue在整个初始化过程，除了给它的原型 prototype 上扩展方法(./instance/index)，还会在initGlobalAPI中给Vue构造函数本身拓展全局静态方法
  */
-initGlobalAPI(Vue)
+initGlobalAPI(Vue);
 
 Object.defineProperty(Vue.prototype, '$isServer', {
   get: isServerRendering

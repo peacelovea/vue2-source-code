@@ -9,19 +9,23 @@ import { query } from './util/index'
 import { compileToFunctions } from './compiler/index'
 import { shouldDecodeNewlines, shouldDecodeNewlinesForHref } from './util/compat'
 
+// 找到id对应的DOM元素，返回该元素的HTML内容
 const idToTemplate = cached(id => {
   const el = query(id)
   return el && el.innerHTML
 })
 
+// 1.首先缓存原型上的$mount方法
 const mount = Vue.prototype.$mount
+// 2.再重新定义$mount
 Vue.prototype.$mount = function (
   el?: string | Element,
   hydrating?: boolean
 ): Component {
+  // 获取el节点
   el = el && query(el)
-
   /* istanbul ignore if */
+  // 对 el 做了限制，Vue 不能挂载在 body、html 这样的根节点上
   if (el === document.body || el === document.documentElement) {
     process.env.NODE_ENV !== 'production' && warn(
       `Do not mount Vue to <html> or <body> - mount to normal elements instead.`
@@ -29,6 +33,9 @@ Vue.prototype.$mount = function (
     return this
   }
 
+  /*
+  * 这部分逻辑很关键，如果没有render方法，就将template/el标识的字符串，通过compileToFunctions转换为render方法
+  * */
   const options = this.$options
   // resolve template/el and convert to render function
   if (!options.render) {
@@ -36,6 +43,7 @@ Vue.prototype.$mount = function (
     if (template) {
       if (typeof template === 'string') {
         if (template.charAt(0) === '#') {
+          // 获取配置中的
           template = idToTemplate(template)
           /* istanbul ignore if */
           if (process.env.NODE_ENV !== 'production' && !template) {
@@ -46,6 +54,12 @@ Vue.prototype.$mount = function (
           }
         }
       } else if (template.nodeType) {
+        // nodeType属性以数字形式返回指定节点的节点类型
+        //  1：元素节点
+        //  2：属性节点
+        //  3：文本节点
+        // ...
+        //  8：注释节点
         template = template.innerHTML
       } else {
         if (process.env.NODE_ENV !== 'production') {
@@ -79,6 +93,7 @@ Vue.prototype.$mount = function (
       }
     }
   }
+  // 最后调用缓存的mount方法，进行挂载
   return mount.call(this, el, hydrating)
 }
 
