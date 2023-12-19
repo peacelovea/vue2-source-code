@@ -138,6 +138,7 @@ export function lifecycleMixin (Vue: Class<Component>) {
   }
 }
 
+// `mountComponent`完成整个渲染工作，其中核心的两个方法为`_render`和`_update`
 export function mountComponent (
   vm: Component,
   el: ?Element,
@@ -176,7 +177,7 @@ export function mountComponent (
       const endTag = `vue-perf-end:${id}`
 
       mark(startTag)
-      const vnode = vm._render()
+      const vnode = vm._render() // render方法用于生成虚拟节点
       mark(endTag)
       measure(`vue ${name} render`, startTag, endTag)
 
